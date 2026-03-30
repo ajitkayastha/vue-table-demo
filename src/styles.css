@@ -1,0 +1,34 @@
+:root {
+  --color-bg: #f3f5f8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #d7dee7;
+  --color-text: #15202b;
+  --color-text-muted: #5b6977;
+  --color-primary: #1366d6;
+  --color-primary-soft: rgba(19, 102, 214, 0.08);
+  --color-danger: #b3261e;
+  --color-success: #1f7a4d;
+  --shadow-card: 0 18px 48px rgba(21, 32, 43, 0.08);
+  --font-base: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #eef2f7 0%, #f7f9fc 100%);
+  color: var(--color-text);
+  font-family: var(--font-base);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
