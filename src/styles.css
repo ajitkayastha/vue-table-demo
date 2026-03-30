@@ -13,20 +13,68 @@
   --font-base: "Avenir Next", "Segoe UI", sans-serif;
 }
 
-* {
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-body {
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
   background: linear-gradient(180deg, #eef2f7 0%, #f7f9fc 100%);
   color: var(--color-text);
   font-family: var(--font-base);
+  line-height: 1.5;
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+picture,
+svg,
+canvas,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .app-shell {

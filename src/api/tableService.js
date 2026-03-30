@@ -120,7 +120,7 @@ function filterDateRange(rows, field, range) {
   });
 }
 
-function filterMultiValue(rows, field, value) {
+function filterMultiValue(rows, field, value, mode) {
   var searchTerms = Array.isArray(value)
     ? value
         .map(function mapEntry(entry) {
@@ -139,7 +139,9 @@ function filterMultiValue(rows, field, value) {
   }
 
   return rows.filter(function matchMultiValue(row) {
-    return searchTerms.every(function matchSearch(searchTerm) {
+    var matcher = mode === 'or' ? 'some' : 'every';
+
+    return searchTerms[matcher](function matchSearch(searchTerm) {
       return (row[field] || []).some(function matchEntry(entry) {
         return includesText(entry, searchTerm);
       });
@@ -187,7 +189,12 @@ function applyColumnFilters(rows, filters) {
     from: normalizedFilters.joinedFrom,
     to: normalizedFilters.joinedTo
   });
-  nextRows = filterMultiValue(nextRows, 'tags', normalizedFilters.tags);
+  nextRows = filterMultiValue(
+    nextRows,
+    'tags',
+    normalizedFilters.tags,
+    normalizedFilters.tagsMode
+  );
 
   return nextRows;
 }
