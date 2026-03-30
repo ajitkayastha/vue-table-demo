@@ -95,18 +95,16 @@
             </div>
 
             <div v-else-if="props.column.field === 'tags'" class="tag-list">
-              <span
-                v-for="tag in props.row.tags"
-                :key="props.row.id + '-' + tag"
-                class="tag-list__item"
-              >
-                {{ tag }}
-              </span>
+              {{ props.row.tags.join(', ') }}
             </div>
 
             <div v-else-if="props.column.field === 'actions'" class="cell-actions">
-              <button type="button" class="link-button">View</button>
-              <button type="button" class="link-button">Message</button>
+              <button type="button" class="icon-button" aria-label="View user">
+                <LucideIcon :icon="actionIcons.eye" />
+              </button>
+              <button type="button" class="icon-button" aria-label="Message user">
+                <LucideIcon :icon="actionIcons.mail" />
+              </button>
             </div>
 
             <span v-else>{{ props.formattedRow[props.column.field] }}</span>
@@ -120,9 +118,11 @@
 <script>
 import { fetchUsersTable } from '../api/tableService';
 import BaseDataTable from '../components/BaseDataTable.vue';
+import LucideIcon from '../components/LucideIcon.vue';
 import TableStateWrapper from '../components/TableStateWrapper.vue';
 import TableToolbar from '../components/TableToolbar.vue';
 import DateRangePicker from 'vue2-daterange-picker';
+import { Eye, Mail } from 'lucide';
 import { debounce } from '../utils/debounce';
 import {
   createTableQuery,
@@ -136,11 +136,16 @@ export default {
   components: {
     BaseDataTable,
     DateRangePicker,
+    LucideIcon,
     TableStateWrapper,
     TableToolbar
   },
   data: function data() {
     return {
+      actionIcons: {
+        eye: Eye,
+        mail: Mail
+      },
       columns: [
         {
           label: 'User',
@@ -226,7 +231,7 @@ export default {
           field: 'actions',
           sortable: false,
           filterable: false,
-          width: '180px'
+          width: '96px'
         }
       ],
       query: createTableQuery({
@@ -480,12 +485,13 @@ export default {
 
 .cell-user {
   display: grid;
-  gap: 2px;
+  gap: 0;
+  line-height: 1.2;
 }
 
 .cell-user span {
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .cell-metric {
@@ -494,21 +500,9 @@ export default {
 }
 
 .tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag-list__item {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: #eef4ff;
-  color: #214d9a;
+  color: var(--color-text-muted);
   font-size: 11px;
-  font-weight: 700;
+  line-height: 1.3;
 }
 
 .tag-filter {
@@ -518,13 +512,13 @@ export default {
 
 .tag-filter__input {
   width: 100%;
-  min-height: 30px;
-  padding: 6px 8px;
+  min-height: 28px;
+  padding: 4px 8px;
   border: 1px solid #d7dee7;
   border-radius: 6px;
   background: #fff;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .tag-filter__input:focus {
@@ -556,8 +550,8 @@ export default {
 
 .date-range-picker__trigger {
   width: 100%;
-  min-height: 30px;
-  padding: 6px 8px;
+  min-height: 28px;
+  padding: 4px 8px;
   border: 1px solid #d7dee7;
   border-radius: 6px;
   background: #fff;
@@ -581,18 +575,29 @@ export default {
 
 .cell-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   white-space: nowrap;
 }
 
-.link-button {
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  border: 0;
-  background: transparent;
+  border: 1px solid #d7dee7;
+  border-radius: 6px;
+  background: #fff;
   color: var(--color-primary);
   cursor: pointer;
-  font-weight: 700;
   font-size: 12px;
+}
+
+.icon-button:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(19, 102, 214, 0.08);
 }
 
 @media (max-width: 720px) {

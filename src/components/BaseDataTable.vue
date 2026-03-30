@@ -149,8 +149,8 @@ export default {
 }
 
 .base-data-table /deep/ .vgt-table th {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   background: #f6f8fb;
   color: var(--color-text-muted);
   font-size: 11px;
@@ -160,15 +160,15 @@ export default {
 }
 
 .base-data-table /deep/ .vgt-table td {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   vertical-align: middle;
 }
 
 .base-data-table /deep/ .vgt-table thead .vgt-input,
 .base-data-table /deep/ .vgt-table thead input {
-  min-height: 30px;
-  padding: 6px 8px;
+  min-height: 28px;
+  padding: 4px 8px;
   border: 1px solid #d7dee7;
   border-radius: 6px;
   background: #fff;
@@ -212,8 +212,8 @@ export default {
 }
 
 .base-data-table /deep/ .vgt-pagination .footer__navigation__page-btn {
-  min-width: 28px;
-  height: 28px;
+  min-width: 26px;
+  height: 26px;
 }
 
 @media (max-width: 720px) {
