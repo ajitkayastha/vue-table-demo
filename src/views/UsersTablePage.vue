@@ -249,7 +249,7 @@ export default {
     };
   },
   created: function created() {
-    this.debouncedSearch = debounce(this.commitSearch, 350);
+    this.debouncedSearch = debounce(this.commitSearch, 300);
     this.fetchTableData();
   },
   computed: {
@@ -267,6 +267,23 @@ export default {
     }
   },
   methods: {
+    sanitizeColumnFilters: function sanitizeColumnFilters(filters) {
+      var nextFilters = Object.assign({}, filters);
+
+      ['name', 'company'].forEach(function sanitizeTextFilter(field) {
+        var value = nextFilters[field];
+        var normalizedValue = typeof value === 'string' ? value.trim() : value;
+
+        if (!normalizedValue || normalizedValue.length < 3) {
+          delete nextFilters[field];
+          return;
+        }
+
+        nextFilters[field] = normalizedValue;
+      });
+
+      return nextFilters;
+    },
     async fetchTableData() {
       var requestId = this.requestSequence + 1;
 
@@ -323,8 +340,26 @@ export default {
       this.fetchTableData();
     },
     handleSearchInput: function handleSearchInput(value) {
+      var normalizedValue = value.trim();
+
       this.searchInput = value;
-      this.debouncedSearch(value);
+
+      if (!normalizedValue.length) {
+        if (this.query.globalSearch) {
+          this.commitSearch('');
+        }
+        return;
+      }
+
+      if (normalizedValue.length < 3) {
+        if (this.query.globalSearch) {
+          this.commitSearch('');
+        }
+
+        return;
+      }
+
+      this.debouncedSearch(normalizedValue);
     },
     clearAllFilters: function clearAllFilters() {
       this.searchInput = '';
@@ -351,7 +386,10 @@ export default {
       this.fetchTableData();
     },
     handleColumnFilterChange: function handleColumnFilterChange(filters) {
-      var nextQuery = replaceColumnFilters(this.query, filters);
+      var nextQuery = replaceColumnFilters(
+        this.query,
+        this.sanitizeColumnFilters(filters)
+      );
 
       if (
         JSON.stringify(nextQuery.columnFilters) ===
