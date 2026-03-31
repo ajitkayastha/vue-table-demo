@@ -1,14 +1,26 @@
 <template>
   <main class="users-page">
     <section class="users-page__hero">
-      <p class="users-page__eyebrow">Users Management Workspace</p>
-      <h1>Users Directory</h1>
-      <p class="users-page__intro">
-        Compare two production-style Vue 2 table renderers in one screen. Use
-        <strong>vue-good-table</strong> for remote-style flow or
-        <strong>AG Grid Community v30</strong> for compact client-side
-        filtering, sorting, and pagination.
-      </p>
+      <div class="users-page__hero-main">
+        <p class="users-page__eyebrow">Users Management Workspace</p>
+        <h1>Users Directory</h1>
+        <p class="users-page__intro">
+          Compare two production-style Vue 2 table renderers in one screen.
+          Use <strong>vue-good-table</strong> for remote-style flow or
+          <strong>AG Grid Community v30</strong> for compact client-side
+          filtering, sorting, and pagination.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="users-page__theme-toggle"
+        :aria-label="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
+        :title="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
+        @click="$emit('toggle-theme')">
+        <LucideIcon
+          :icon="isDarkTheme ? actionIcons.sun : actionIcons.moon"
+          :size="14" />
+      </button>
     </section>
 
     <section class="users-page__table-shell">
@@ -168,7 +180,7 @@ import LucideIcon from '../components/LucideIcon.vue'
 import TableStateWrapper from '../components/TableStateWrapper.vue'
 import TableToolbar from '../components/TableToolbar.vue'
 import DateRangePicker from 'vue2-daterange-picker'
-import { Eye, Mail } from 'lucide'
+import { Eye, Mail, Moon, Sun } from 'lucide'
 import { debounce } from '../utils/debounce'
 import {
   createTableQuery,
@@ -179,6 +191,12 @@ import {
 
 export default {
   name: 'UsersTablePage',
+  props: {
+    isDarkTheme: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     BaseAgGridTable,
     BaseDataTable,
@@ -192,6 +210,8 @@ export default {
       actionIcons: {
         eye: Eye,
         mail: Mail,
+        moon: Moon,
+        sun: Sun,
       },
       columns: [
         {
@@ -623,7 +643,15 @@ export default {
 }
 
 .users-page__hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
   margin-bottom: 14px;
+}
+
+.users-page__hero-main {
+  min-width: 0;
 }
 
 .users-page__eyebrow {
@@ -647,6 +675,22 @@ export default {
   color: var(--color-text-muted);
   font-size: 14px;
   line-height: 1.5;
+}
+
+.users-page__theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-height: 30px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .users-page__table-shell {
@@ -738,6 +782,27 @@ export default {
   box-shadow: 0 1px 2px rgba(21, 32, 43, 0.08);
 }
 
+[data-theme='dark'] .tag-filter__input {
+  background: #121a24;
+  border-color: #334154;
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .tag-filter__mode {
+  background: #182130;
+  border-color: #334154;
+}
+
+[data-theme='dark'] .tag-filter__mode-button {
+  color: #9eacc0;
+}
+
+[data-theme='dark'] .tag-filter__mode-button--active {
+  background: #121a24;
+  color: #a8c7ff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
 .date-range-picker {
   min-width: 180px;
   width: 100%;
@@ -787,6 +852,16 @@ export default {
   color: #8291a0;
 }
 
+[data-theme='dark'] .date-range-picker__trigger {
+  background: #121a24;
+  border-color: #334154;
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .date-range-picker__trigger--placeholder {
+  color: #8fa2b9;
+}
+
 .cell-actions {
   display: flex;
   gap: 8px;
@@ -817,6 +892,11 @@ export default {
 @media (max-width: 720px) {
   .users-page {
     padding: 18px 10px;
+  }
+
+  .users-page__hero {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 </style>

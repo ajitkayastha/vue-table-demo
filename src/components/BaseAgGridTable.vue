@@ -968,6 +968,21 @@ export default {
   font-weight: 300;
 }
 
+[data-theme='dark'] .base-ag-grid-table /deep/ .ag-header,
+[data-theme='dark'] .base-ag-grid-table /deep/ .ag-header-viewport,
+[data-theme='dark'] .base-ag-grid-table /deep/ .ag-header-container {
+  background: #182130;
+}
+
+[data-theme='dark'] .base-ag-grid-table /deep/ .ag-header-cell,
+[data-theme='dark'] .base-ag-grid-table /deep/ .ag-header-group-cell {
+  border-color: #2c3746;
+}
+
+[data-theme='dark'] .base-ag-grid-table /deep/ .ag-header-cell-text {
+  color: #c7d4e7;
+}
+
 .base-ag-grid-table /deep/ .ag-header-cell {
   padding-left: 8px;
   padding-right: 8px;
@@ -1070,6 +1085,30 @@ export default {
   background: #fff;
   color: #214d9a;
   box-shadow: 0 1px 2px rgba(21, 32, 43, 0.08);
+}
+
+[data-theme='dark'] .base-ag-grid-table /deep/ .tags-floating-filter__input {
+  background: #121a24;
+  border-color: #334154;
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .base-ag-grid-table /deep/ .tags-floating-filter__mode {
+  background: #182130;
+  border-color: #334154;
+}
+
+[data-theme='dark'] .base-ag-grid-table /deep/ .tags-floating-filter__button {
+  color: #9eacc0;
+}
+
+[data-theme='dark']
+  .base-ag-grid-table
+  /deep/
+  .tags-floating-filter__button--active {
+  background: #121a24;
+  color: #a8c7ff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 .base-ag-grid-table /deep/ .ag-action-cell {

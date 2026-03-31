@@ -201,6 +201,40 @@ export default {
   background: #fcfdff;
 }
 
+[data-theme='dark'] .base-data-table /deep/ .vgt-table th {
+  background: #182130;
+  color: #c7d4e7;
+  border-color: #2c3746;
+}
+
+[data-theme='dark'] .base-data-table /deep/ .vgt-table td {
+  background: #121922;
+  color: var(--color-text);
+  border-color: #2c3746;
+}
+
+[data-theme='dark'] .base-data-table /deep/ .vgt-table.striped tbody tr:nth-of-type(odd) {
+  background: #111923;
+}
+
+[data-theme='dark'] .base-data-table /deep/ .vgt-table thead .vgt-input,
+[data-theme='dark'] .base-data-table /deep/ .vgt-table thead input {
+  background: #121a24;
+  border-color: #334154;
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .base-data-table /deep/ .vgt-table thead .vgt-input::placeholder,
+[data-theme='dark'] .base-data-table /deep/ .vgt-table thead input::placeholder {
+  color: #8fa2b9;
+}
+
+[data-theme='dark'] .base-data-table /deep/ .vgt-table thead .vgt-input:focus,
+[data-theme='dark'] .base-data-table /deep/ .vgt-table thead input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(114, 167, 255, 0.18);
+}
+
 .base-data-table /deep/ .vgt-left-align {
   white-space: nowrap;
 }
