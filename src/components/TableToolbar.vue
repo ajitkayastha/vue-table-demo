@@ -13,12 +13,22 @@
       </label>
 
       <div class="table-toolbar__summary">
+        <label class="table-toolbar__engine">
+          <span>Renderer</span>
+          <select
+            :value="tableEngine"
+            @change="$emit('table-engine-change', $event.target.value)">
+            <option value="vue-good-table">vue-good-table</option>
+            <option value="ag-grid">AG Grid v30</option>
+          </select>
+        </label>
         <strong>{{ totalRows }}</strong>
         <span>results</span>
         <span class="table-toolbar__summary-muted">
           Page {{ page }} / Size {{ pageSize }}
         </span>
         <button
+          v-if="tableEngine !== 'ag-grid'"
           class="table-toolbar__clear"
           type="button"
           :disabled="!hasActiveFilters"
@@ -54,6 +64,10 @@ export default {
     totalRows: {
       type: Number,
       default: 0
+    },
+    tableEngine: {
+      type: String,
+      default: 'vue-good-table'
     }
   }
 };
@@ -85,7 +99,7 @@ export default {
 
 .table-toolbar__label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -116,6 +130,22 @@ export default {
   font-size: 12px;
 }
 
+.table-toolbar__engine {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 8px;
+}
+
+.table-toolbar__engine select {
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+}
+
 .table-toolbar__summary strong {
   color: var(--color-text);
   font-size: 16px;
@@ -135,7 +165,7 @@ export default {
   color: var(--color-text);
   cursor: pointer;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .table-toolbar__clear:disabled {

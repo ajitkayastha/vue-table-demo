@@ -1,6 +1,9 @@
-# Vue 2 vue-good-table Foundation
+# Vue 2 Table Foundation (vue-good-table + AG Grid v30)
 
-This project sets up a reusable Vue 2 table baseline using `vue-good-table` with a controlled, server-style data flow.
+This project sets up a reusable Vue 2 table baseline with two renderer options:
+
+- `vue-good-table` for the original remote-style table flow.
+- `ag-grid-vue@30` + `ag-grid-community@30` as an alternate Vue 2-compatible grid using the AG Grid client-side row model.
 
 ## Run
 
@@ -17,8 +20,9 @@ npm run build
 
 ## Architecture
 
-- `src/views/UsersTablePage.vue` owns query state, server-style fetch triggers, and page-specific column definitions.
+- `src/views/UsersTablePage.vue` owns query state, renderer selection, fetch triggers, and page-specific column definitions.
 - `src/components/BaseDataTable.vue` wraps `vue-good-table` and normalizes remote-mode pagination and sorting events.
+- `src/components/BaseAgGridTable.vue` wraps AG Grid Community v30 (`rowModelType="clientSide"`) with Vue 2 compatibility.
 - `src/components/TableToolbar.vue` provides reusable global search and scalable text/number/date filter inputs.
 - `src/components/TableStateWrapper.vue` centralizes loading, empty, no-results, and error UI states.
 - `src/api/tableService.js` acts as a backend adapter layer. It fetches placeholder data, maps it into stable table rows, and simulates server-side filtering, sorting, and pagination.

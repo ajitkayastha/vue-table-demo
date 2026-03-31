@@ -119,7 +119,7 @@ export default {
   background: rgba(255, 255, 255, 0.96);
   color: var(--color-primary);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
   box-shadow: 0 10px 22px rgba(21, 32, 43, 0.08);
 }

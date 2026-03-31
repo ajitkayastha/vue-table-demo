@@ -1,11 +1,13 @@
 <template>
   <main class="users-page">
     <section class="users-page__hero">
-      <p class="users-page__eyebrow">Reusable Vue 2 Table Foundation</p>
-      <h1>Users</h1>
+      <p class="users-page__eyebrow">Users Management Workspace</p>
+      <h1>Users Directory</h1>
       <p class="users-page__intro">
-        Server-style pagination, sorting, debounced search, and reusable column
-        filters for legacy admin screens.
+        Compare two production-style Vue 2 table renderers in one screen. Use
+        <strong>vue-good-table</strong> for remote-style flow or
+        <strong>AG Grid Community v30</strong> for compact client-side
+        filtering, sorting, and pagination.
       </p>
     </section>
 
@@ -15,9 +17,11 @@
         :page="query.page"
         :page-size="query.pageSize"
         :search-value="searchInput"
+        :table-engine="tableEngine"
         :total-rows="query.totalRows"
         @clear-filters="clearAllFilters"
-        @search-input="handleSearchInput" />
+        @search-input="handleSearchInput"
+        @table-engine-change="handleTableEngineChange" />
 
       <TableStateWrapper
         :error="query.error"
@@ -26,6 +30,7 @@
         :loading="query.loading"
         @retry="fetchTableData">
         <BaseDataTable
+          v-if="!isAgGridMode"
           :key="tableRenderKey"
           :columns="columns"
           :query="query"
@@ -138,6 +143,18 @@
             <span v-else>{{ props.formattedRow[props.column.field] }}</span>
           </template>
         </BaseDataTable>
+
+        <BaseAgGridTable
+          v-else
+          :key="'ag-grid-' + tableRenderKey"
+          :columns="columns"
+          :query="query"
+          :rows="rows"
+          :total-rows="query.totalRows"
+          @column-filter-change="handleColumnFilterChange"
+          @page-change="handlePageChange"
+          @page-size-change="handlePageSizeChange"
+          @sort-change="handleSortChange" />
       </TableStateWrapper>
     </section>
   </main>
@@ -145,6 +162,7 @@
 
 <script>
 import { fetchUsersTable } from '../api/tableService'
+import BaseAgGridTable from '../components/BaseAgGridTable.vue'
 import BaseDataTable from '../components/BaseDataTable.vue'
 import LucideIcon from '../components/LucideIcon.vue'
 import TableStateWrapper from '../components/TableStateWrapper.vue'
@@ -162,6 +180,7 @@ import {
 export default {
   name: 'UsersTablePage',
   components: {
+    BaseAgGridTable,
     BaseDataTable,
     DateRangePicker,
     LucideIcon,
@@ -272,6 +291,7 @@ export default {
       requestSequence: 0,
       rows: [],
       searchInput: '',
+      tableEngine: 'vue-good-table',
       tagFilterInput: '',
       tagFilterMode: 'and',
       tableRenderKey: 0,
@@ -282,6 +302,9 @@ export default {
     this.fetchTableData()
   },
   computed: {
+    isAgGridMode: function isAgGridMode() {
+      return this.tableEngine === 'ag-grid'
+    },
     hasActiveFiltering: function hasActiveFiltering() {
       return (
         Boolean(this.query.globalSearch) ||
@@ -289,6 +312,10 @@ export default {
       )
     },
     isEmptyState: function isEmptyState() {
+      if (this.isAgGridMode) {
+        return false
+      }
+
       return (
         !this.query.loading &&
         !this.query.error &&
@@ -297,6 +324,10 @@ export default {
       )
     },
     isNoResultsState: function isNoResultsState() {
+      if (this.isAgGridMode) {
+        return false
+      }
+
       return (
         !this.query.loading &&
         !this.query.error &&
@@ -325,6 +356,17 @@ export default {
     },
     async fetchTableData() {
       var requestId = this.requestSequence + 1
+      var requestQuery = normalizeQueryForRequest(this.query)
+
+      if (this.isAgGridMode) {
+        requestQuery = Object.assign({}, requestQuery, {
+          page: 1,
+          pageSize: 100000,
+          sortField: '',
+          sortDirection: 'asc',
+          clientSide: true,
+        })
+      }
 
       this.requestSequence = requestId
       this.query = Object.assign({}, this.query, {
@@ -333,9 +375,7 @@ export default {
       })
 
       try {
-        var response = await fetchUsersTable(
-          normalizeQueryForRequest(this.query),
-        )
+        var response = await fetchUsersTable(requestQuery)
 
         if (requestId !== this.requestSequence) {
           return
@@ -366,20 +406,41 @@ export default {
       this.query = Object.assign({}, this.query, {
         page: nextPage,
       })
-      this.fetchTableData()
+
+      if (!this.isAgGridMode) {
+        this.fetchTableData()
+      }
     },
     handlePageSizeChange: function handlePageSizeChange(nextPageSize) {
       this.query = Object.assign({}, this.query, {
         page: 1,
         pageSize: nextPageSize,
       })
-      this.fetchTableData()
+
+      if (!this.isAgGridMode) {
+        this.fetchTableData()
+      }
     },
     handleSortChange: function handleSortChange(sort) {
       this.query = Object.assign({}, this.query, {
         page: 1,
         sortField: sort.field || this.query.sortField,
         sortDirection: sort.direction || 'asc',
+      })
+
+      if (!this.isAgGridMode) {
+        this.fetchTableData()
+      }
+    },
+    handleTableEngineChange: function handleTableEngineChange(engine) {
+      if (engine === this.tableEngine) {
+        return
+      }
+
+      this.tableEngine = engine
+      this.tableRenderKey += 1
+      this.query = Object.assign({}, this.query, {
+        page: 1,
       })
       this.fetchTableData()
     },
@@ -569,7 +630,7 @@ export default {
   margin: 0 0 6px;
   color: var(--color-primary);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }

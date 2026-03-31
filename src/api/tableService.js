@@ -262,6 +262,23 @@ export async function fetchUsersTable(query) {
     applyGlobalSearch(mappedRows, query.globalSearch),
     query.columnFilters || {}
   );
+  var isClientSide = Boolean(query.clientSide);
+
+  if (isClientSide) {
+    return {
+      rows: filteredRows,
+      meta: buildMeta(
+        {
+          page: query.page || 1,
+          pageSize: query.pageSize || filteredRows.length,
+          sortField: query.sortField || '',
+          sortDirection: query.sortDirection || 'asc'
+        },
+        filteredRows.length
+      )
+    };
+  }
+
   var sortedRows = sortRows(filteredRows, query.sortField, query.sortDirection);
   var paginatedRows = paginateRows(sortedRows, query.page, query.pageSize);
 

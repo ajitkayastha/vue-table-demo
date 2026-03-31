@@ -10,7 +10,7 @@
   --color-danger: #b3261e;
   --color-success: #1f7a4d;
   --shadow-card: 0 18px 48px rgba(21, 32, 43, 0.08);
-  --font-base: "Avenir Next", "Segoe UI", sans-serif;
+  --font-base: "Noto Sans", "Segoe UI", sans-serif;
 }
 
 html {
